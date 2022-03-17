@@ -1,0 +1,192 @@
+/* sets the body background to a somewhat dark gray */
+body
+{
+    background-color: #333333;
+}
+
+/* sets the navbar background to a dark gray */
+.darknav
+{
+    background: #202020;
+}
+
+/* holds the chatbox */
+.container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* css for the chatbox */
+.chat-box
+{
+    width: 640px;
+    height: 720px;
+    background-color: #555555;
+    overflow: hidden;
+    border-radius: 10px;
+    position: relative;
+}
+
+/* blue header in the chatbox */
+.chat-box-header
+{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    height: 105px;
+    background-color: #266ed9;
+    padding: 15px;
+}
+
+/* edits the image in the header */
+.chat-box-header img
+{
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+}
+
+/* holds all of the user's and bot's messages */
+.messages
+{
+    width: 100%;
+    height: 550px;
+    padding: 0 15px;
+    color: #fff;
+    position: relative;
+    font-size: 0.9em;
+    overflow-y: auto;
+}
+
+/* css for one of the bot's messages */
+.bot-message
+{
+    width: 55%;
+    word-wrap: break-word;
+    background-color: #999999;
+    padding: 7px 10px;
+    border-radius: 10px 10px 10px 0;
+    margin: 10px 0;
+}
+
+/* css for one of the user's messages */
+.user-message
+{
+    width: 55%;
+    word-wrap: break-word;
+    background-color: #266ed9;
+    padding: 7px 10px;
+    border-radius: 10px 10px 0 10px;
+    margin: 5px 0 5px auto;
+}
+
+/* css for the message textbox and send button */
+.input-field
+{
+    display: flex;
+    align-items: center;
+    width: 640px;
+    height: 65px;
+    background-color: #555555;
+    padding: 15px;
+    padding-top: 10px;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+}
+
+/* css for the message textbox only */
+.input-field input
+{
+    width: calc(100% - 45px);
+    max-width: 100%;
+    box-sizing: border-box;
+    height: 100%;
+    background-color: #d4d4d4;
+    border-radius: 50px;
+    color: #000;
+    font-size: 1.2em;
+    padding: 0 15px;
+}
+
+/* css for the button only */
+.send-button
+{
+    background-color: transparent;
+    overflow: hidden;
+    position: relative;
+    border: none;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+/* sets the text to the color white */
+.whitetext
+{
+    color: white;
+}
+
+/* sets the top margin to 75px */
+.margintop
+{
+    margin-top: 75px;
+}
+
+/* wraps text */
+.wrap-text
+{
+    word-break: break-word;
+}
+
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+main .form-control
+{
+    /* Center form controls */
+    display: inline-block;
+
+    /* Override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* Scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* Center contents */
+    text-align: center;
+    
+    background: 333333;
+}
+
+/* makes the element be positioned at the left */
+.left
+{
+    float: left;
+}
+
+/* adds padding to the top of an element (and a bit below) */
+.paddingtop
+{
+    padding-top: 50px;
+    padding-bottom: 48px;
+}
+
+/* adds padding to the bottom of an element */
+.paddingbottom
+{
+    padding-bottom: 25px;
+}
+
+main img
+{
+    /* Constrain images on small screens */
+    max-width: 100%;
+}

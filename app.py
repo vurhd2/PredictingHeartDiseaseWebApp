@@ -29,6 +29,16 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 @app.route("/", methods=["GET", "POST"])
+def redirecting():
+    return redirect("/index")
+
 @app.route("/index", methods=["GET", "POST"])
 def index():
     return render_template("index.html")
+
+@app.route("/result", methods=["GET", "POST"])
+def result():
+    if request.method == "POST":
+        return render_template("result.html")
+    else:
+        return render_template("index.html")
