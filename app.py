@@ -1,3 +1,5 @@
+import re
+from turtle import setx
 from flask import Flask, flash, redirect, render_template, request, session 
 from flask_session import Session
 from tempfile import mkdtemp
@@ -32,13 +34,111 @@ Session(app)
 def redirecting():
     return redirect("/index")
 
+global age
+global sex
+global chestpaintype
+global restingbp
+global cholesterol
+global fastingbs
+global maxhr
+global exerciseangina
+global oldpeak
+global stslope
+
+submitted = False
 @app.route("/index", methods=["GET", "POST"])
 def index():
+    if request.method() == "POST":
+
+        global age
+        age = request.form.get("age")
+        if not age:
+            flash("Missing Username")
+            return render_template("index.html")
+        
+        global sex
+        sex = request.form.get("sex")
+        if not sex:
+            flash("Missing Sex")
+            return render_template("index.html")
+        elif sex != "M" and sex != "F" and sex != "I":
+            flash("Invalid Sex")
+            return render_template("index.html")
+        
+        global chestpaintype
+        chestpaintype = request.form.get("chestpaintype")
+        if not chestpaintype:
+            flash("Missing Chest Pain Type")
+            return render_template("index.html")
+        elif chestpaintype != "TA" and chestpaintype != "ATA" and chestpaintype != "NAP" and chestpaintype != "ASY":
+            flash("Invalid Chest Pain Type")
+            return render_template("index.html")
+        
+        global restingbp
+        restingbp = request.form.get("restingbp")
+        if not restingbp:
+            flash("Missing Resting Blood Pressure")
+            return render_template("index.html")
+
+        global cholesterol
+        cholesterol = request.form.get("cholesterol")
+        if not cholesterol:
+            flash("Missing Cholesterol")
+            return render_template("index.html")
+
+        global fastingbs
+        fastingbs = request.form.get("fastingbs")
+        if not fastingbs:
+            flash("Missing Fasting Blood Sugar")
+            return render_template("index.html")
+
+        global maxhr
+        maxhr = request.form.get("maxhr")
+        if not maxhr:
+            flash("Missing Maximum Heart Rate")
+            return render_template("index.html")
+        
+        global exerciseangina
+        exerciseangina = request.form.get("exerciseangina")
+        if not exerciseangina:
+            flash("Missing Exercise Angina")
+            return render_template("index.html")
+        elif exerciseangina != "Y" and exerciseangina != "N":
+            flash("Invalid Exercise Angina")
+            return render_template("index.html")
+        
+        global oldpeak
+        oldpeak = request.form.get("oldpeak")
+        if not oldpeak:
+            flash("Missing Oldpeak")
+            return render_template("index.html")
+        
+        global stslope
+        stslope = request.form.get("stslope")
+        if not stslope:
+            flash("Missing ST Slope")
+            return render_template("index.html")
+        elif stslope != "Up" and stslope != "Flat" and stslope != "Down":
+            flash("Invalid ST Slope")
+            return render_template("index.html")
+        
+        global submitted 
+        submitted = True
+
+        return redirect("/result")
     return render_template("index.html")
 
 @app.route("/result", methods=["GET", "POST"])
 def result():
-    if request.method == "POST":
-        return render_template("result.html")
-    else:
-        return render_template("index.html")
+    global submitted
+    if not submitted:
+        return redirect("/")
+    submitted = False
+    stats = output()
+
+
+def output():
+    data = pd.read_csv('heart.csv')
+    data = data.drop(columns=["RestingECG"])
+    df = pd.get_dummies(data, columns=["Sex", "ChestPainType", "ExerciseAngina", "ST_Slope"])
+    scaler = MaxAbsScaler()
