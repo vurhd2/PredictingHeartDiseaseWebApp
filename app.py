@@ -48,11 +48,11 @@ global stslope
 submitted = False
 @app.route("/index", methods=["GET", "POST"])
 def index():
-    if request.method() == "POST":
+    if request.method == "POST":
         global age
         age = request.form.get("age")
         if not age:
-            flash("Missing Username")
+            flash("Missing Age")
             return render_template("index.html")
         
         global sex
@@ -148,7 +148,8 @@ def result():
 def output():
     data = pd.read_csv('heart.csv')
     data = data.drop(columns=["RestingECG"])
-    df = pd.get_dummies(data, columns=["Sex", "ChestPainType", "ExerciseAngina", "ST_Slope"])
+    df = pd.get_dummies(data)
+    #df = pd.get_dummies(data, columns=["Sex", "ChestPainType", "ExerciseAngina", "ST_Slope"])
     
     scaler = MaxAbsScaler()
     
@@ -182,9 +183,14 @@ def output():
     global stslope
 
     x_input = [age, sex, chestpaintype, restingbp, cholesterol, fastingbs, maxhr, exerciseangina, oldpeak, stslope]
-    predictions = cross_val_predict(model, x_input, cv=skf)
+    x_input = pd.get_dummies(x_input)
 
-    return [specificity, sensitivity, specificity+sensitivity, predictions]
+    x_input = scaler.fit_transform(x_input)
+
+    #new_predictions = cross_val_predict(model, x_input, y_output, cv=skf)
+    new_predictions = model.predict(x_input)
+
+    return [specificity, sensitivity, specificity+sensitivity, new_predictions[0]]
 
 
 
