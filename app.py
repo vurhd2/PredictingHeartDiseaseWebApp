@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MaxAbsScaler 
-
+from sklearn.ensemble import RandomForestClassifier
 
 # creating flask object
 app = Flask(__name__)
@@ -49,7 +49,6 @@ submitted = False
 @app.route("/index", methods=["GET", "POST"])
 def index():
     if request.method() == "POST":
-
         global age
         age = request.form.get("age")
         if not age:
@@ -135,10 +134,57 @@ def result():
         return redirect("/")
     submitted = False
     stats = output()
+    spec = stats[0] * 100
+    sens = stats[1] * 100
+    total = stats[2] * 50
+    if (stats[3] == 1):
+        result = "Yes"
+    else:
+        result = "No"
+
+    return render_template("result.html",result=result,spec=spec,sens=sens,total=total)
 
 
 def output():
     data = pd.read_csv('heart.csv')
     data = data.drop(columns=["RestingECG"])
     df = pd.get_dummies(data, columns=["Sex", "ChestPainType", "ExerciseAngina", "ST_Slope"])
+    
     scaler = MaxAbsScaler()
+    
+    x = scaler.fit_transform(df.drop("HeartDisease", axis=1))
+    y = df["HeartDisease"]
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
+
+    model = RandomForestClassifier()
+    model.fit(x_train, y_train.ravel())
+
+    predictions = model.predict(x_test)
+
+    skf = StratifiedKFold(shuffle=True, n_splits=20)
+    SKFpredictions = cross_val_predict(model, x_test, y_test.ravel(), cv=skf)
+    TN, FP, FN, TP = confusion_matrix(y_test, SKFpredictions, labels=[0,1]).ravel()
+
+    specificity = float(TN / (TN + FP))
+
+    sensitivity = float(TP / (FN + TP))
+
+    global age
+    global sex
+    global chestpaintype
+    global restingbp
+    global cholesterol
+    global fastingbs
+    global maxhr
+    global exerciseangina
+    global oldpeak
+    global stslope
+
+    x_input = [age, sex, chestpaintype, restingbp, cholesterol, fastingbs, maxhr, exerciseangina, oldpeak, stslope]
+    predictions = cross_val_predict(model, x_input, cv=skf)
+
+    return [specificity, sensitivity, specificity+sensitivity, predictions]
+
+
+
