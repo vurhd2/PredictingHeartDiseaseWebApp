@@ -146,15 +146,41 @@ def result():
 
 
 def output():
+    global age
+    global sex
+    global chestpaintype
+    global restingbp
+    global cholesterol
+    global fastingbs
+    global maxhr
+    global exerciseangina
+    global oldpeak
+    global stslope
+
+    x_input ={}
+    x_input["Age"] = age
+    x_input["Sex"] = sex
+    x_input["ChestPainType"] = chestpaintype
+    x_input["RestingBP"] = restingbp
+    x_input["Cholesterol"] = cholesterol
+    x_input["FastingBS"] = fastingbs
+    x_input["MaxHR"] = maxhr
+    x_input["ExerciseAngina"] = exerciseangina
+    x_input["Oldpeak"] = oldpeak
+    x_input["ST_Slope"] = stslope
+    x_input = pd.DataFrame.from_dict([x_input])
+    
     data = pd.read_csv('heart.csv')
     data = data.drop(columns=["RestingECG"])
-    df = pd.get_dummies(data)
-    #df = pd.get_dummies(data, columns=["Sex", "ChestPainType", "ExerciseAngina", "ST_Slope"])
+    combined = pd.concat([data, x_input])
+    df = pd.get_dummies(combined, columns=["Sex", "ChestPainType", "ExerciseAngina", "ST_Slope"])
     
     scaler = MaxAbsScaler()
     
     x = scaler.fit_transform(df.drop("HeartDisease", axis=1))
-    y = df["HeartDisease"]
+    x_input = x[-1:,:-1]
+    x = x[:-1]
+    y = df["HeartDisease"][:-1]
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
 
@@ -170,22 +196,7 @@ def output():
     specificity = float(TN / (TN + FP))
 
     sensitivity = float(TP / (FN + TP))
-
-    global age
-    global sex
-    global chestpaintype
-    global restingbp
-    global cholesterol
-    global fastingbs
-    global maxhr
-    global exerciseangina
-    global oldpeak
-    global stslope
-
-    x_input = [age, sex, chestpaintype, restingbp, cholesterol, fastingbs, maxhr, exerciseangina, oldpeak, stslope]
-    x_input = pd.get_dummies(x_input)
-
-    x_input = scaler.fit_transform(x_input)
+    
 
     #new_predictions = cross_val_predict(model, x_input, y_output, cv=skf)
     new_predictions = model.predict(x_input)
