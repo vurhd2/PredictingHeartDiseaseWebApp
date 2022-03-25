@@ -178,7 +178,8 @@ def output():
     scaler = MaxAbsScaler()
     
     x = scaler.fit_transform(df.drop("HeartDisease", axis=1))
-    x_input = x[-1:,:-1]
+    #x_input = x[-1:,:-1]
+    x_input = x[-1:]
     x = x[:-1]
     y = df["HeartDisease"][:-1]
 
