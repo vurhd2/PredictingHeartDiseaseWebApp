@@ -1,61 +1,73 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Info
+    Form
 {% endblock %}
 
 {% block main %}
     <form action="/index" method="post">
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="age" placeholder="Age" type="number" min="0" max="130">
+        <div class="row">
+            <div class="col-auto">
+                <div class="form-group">
+                    <input autocomplete="off" autofocus class="form-control" name="age" placeholder="Age" type="number" min="0" max="130">
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="sex">
+                        <option value="" disabled selected>Sex</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                        <option value="I">Intersex</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-group">
+                    <select class="form-control" name="chestpaintype" placeholder="ChestPainType">
+                        <option value="" disabled selected>Type of Angina</option>
+                        <option value="TA">Typical Angina</option>
+                        <option value="ATA">Atypical Angina</option>
+                        <option value="NAP">Non-Anginal Pain</option>
+                        <option value="ASY">Asymptomatic</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" name="restingbp" placeholder="Resting Blood Pressure" type="number" min="0">
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-group">
+                    <input class="form-control" name="cholesterol" placeholder="Cholesterol (mm/dl)" type="number" min="0">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" name="fastingbs" placeholder="Fasting Blood Sugar" type="number" min="0">
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-group">
+                    <input class="form-control" name="maxhr" placeholder="Maximum Heart Rate" type="number" min="60" max="202">
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="exerciseangina" placeholder="Exercise Angina">
+                        <option value="" disabled selected>Presence of Exercise Angina</option>
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-group">
+                    <input class="form-control" name="oldpeak" placeholder="Oldpeak" type="number" min="-2.5" max="4.5" step="0.1">
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="stslope" placeholder="ST Slope">
+                        <option value="" disabled selected>Slope of ST Segment</option>
+                        <option value="Up">Upsloping</option>
+                        <option value="Flat">Flat</option>
+                        <option value="Down">Downsloping</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <select class="form-control" name="sex" placeholder="Sex">
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-                <option value="I">Intersex</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <select class="form-control" name="chestpaintype" placeholder="ChestPainType">
-                <option value="TA">Typical Angina</option>
-                <option value="ATA">Atypical Angina</option>
-                <option value="NAP">Non-Anginal Pain</option>
-                <option value="ASY">Asymptomatic</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="restingbp" placeholder="Resting Blood Pressure" type="number" min="0">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="cholesterol" placeholder="Cholesterol (mm/dl)" type="number" min="0">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="fastingbs" placeholder="Fasting Blood Sugar" type="number" min="0">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="maxhr" placeholder="Maximum Heart Rate" type="number" min="60" max="202">
-        </div>
-        <div class="form-group">
-            <label for="exerciseangina">Do You Have An Exercise Angina?</label>
-            <select class="form-control" name="exerciseangina" placeholder="Exercise Angina">
-                <option value="Y">Yes</option>
-                <option value="N">No</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="oldpeak" placeholder="Oldpeak" type="number" min="-2.5" max="4.5">
-        </div>
-        <div class="form-group">
-            <select class="form-control" name="stslope" placeholder="ST Slope">
-                <option value="Up">Upsloping</option>
-                <option value="Flat">Flat</option>
-                <option value="Down">Downsloping</option>
-            </select>
-        </div>
-        <button class="btn btn-light" type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
 {% endblock %}
-
-
-

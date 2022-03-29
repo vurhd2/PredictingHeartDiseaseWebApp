@@ -30,10 +30,12 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# direct people at "/" to "/index" just to make it easy
 @app.route("/", methods=["GET", "POST"])
 def redirecting():
     return redirect("/index")
 
+# define the global variables needed for the model
 global age
 global sex
 global chestpaintype
@@ -45,10 +47,13 @@ global exerciseangina
 global oldpeak
 global stslope
 
+# variable to check if the form has been submitted or not
 submitted = False
+# "/index" page, holds the user form
 @app.route("/index", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        # checks value and updates age
         global age
         age = request.form.get("age")
         if not age:
@@ -157,7 +162,8 @@ def output():
     global oldpeak
     global stslope
 
-    x_input ={}
+    # create a dictionary with all the values
+    x_input = {}
     x_input["Age"] = age
     x_input["Sex"] = sex
     x_input["ChestPainType"] = chestpaintype
@@ -168,41 +174,46 @@ def output():
     x_input["ExerciseAngina"] = exerciseangina
     x_input["Oldpeak"] = oldpeak
     x_input["ST_Slope"] = stslope
+    # turn the dictionary into a pd DataFrame
     x_input = pd.DataFrame.from_dict([x_input])
     
+    # get the csv data
     data = pd.read_csv('heart.csv')
+    # drop RestingECG
     data = data.drop(columns=["RestingECG"])
+    # concatenate the input values and the csv data
     combined = pd.concat([data, x_input])
+    # dummy encode both together
     df = pd.get_dummies(combined, columns=["Sex", "ChestPainType", "ExerciseAngina", "ST_Slope"])
     
+    # initialize the scaler
     scaler = MaxAbsScaler()
-    
+    # scale both together   
     x = scaler.fit_transform(df.drop("HeartDisease", axis=1))
-    #x_input = x[-1:,:-1]
+    
+    # extract the input values
     x_input = x[-1:]
+    # get the x values of the csv data
     x = x[:-1]
+    # get the y values of the csv data
     y = df["HeartDisease"][:-1]
 
+    # split the data
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
 
+    # get the Random Forest model and train it
     model = RandomForestClassifier()
     model.fit(x_train, y_train.ravel())
 
-    predictions = model.predict(x_test)
-
+    # get the stratified k fold model and get the accuracies
     skf = StratifiedKFold(shuffle=True, n_splits=20)
     SKFpredictions = cross_val_predict(model, x_test, y_test.ravel(), cv=skf)
     TN, FP, FN, TP = confusion_matrix(y_test, SKFpredictions, labels=[0,1]).ravel()
-
     specificity = float(TN / (TN + FP))
-
     sensitivity = float(TP / (FN + TP))
     
-
-    #new_predictions = cross_val_predict(model, x_input, y_output, cv=skf)
+    # make the prediction using the input values
     new_predictions = model.predict(x_input)
 
+    # return the list with the accuracies and the prediction
     return [specificity, sensitivity, specificity+sensitivity, new_predictions[0]]
-
-
-
